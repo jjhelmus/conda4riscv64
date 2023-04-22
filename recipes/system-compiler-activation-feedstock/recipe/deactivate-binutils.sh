@@ -1,0 +1,15 @@
+unset ADDR2LINE
+unset AR
+unset AS
+unset CXXFILT
+unset ELFEDIT
+unset GPROF
+unset LD
+unset NM
+unset OBJCOPY
+unset OBJDUMP
+unset RANLIB
+unset READELF
+unset SIZE
+unset STRINGS
+unset STRIP

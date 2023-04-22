@@ -1,0 +1,15 @@
+export ADDR2LINE=/usr/bin/addr2line 
+export AR=/usr/bin/ar 
+export AS=/usr/bin/as 
+export CXXFILT=/usr/bin/c++filt 
+export ELFEDIT=/usr/bin/elfedit 
+export GPROF=/usr/bin/gprof 
+export LD=/usr/bin/ld 
+export NM=/usr/bin/nm 
+export OBJCOPY=/usr/bin/objcopy 
+export OBJDUMP=/usr/bin/objdump 
+export RANLIB=/usr/bin/ranlib 
+export READELF=/usr/bin/readelf
+export SIZE=/usr/bin/size 
+export STRINGS=/usr/bin/strings 
+export STRIP=/usr/bin/strip

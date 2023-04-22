@@ -1,0 +1,4 @@
+c_compiler:
+  - system_gcc
+cxx_compiler:
+  - system_gxx

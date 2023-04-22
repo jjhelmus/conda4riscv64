@@ -1,0 +1,92 @@
+package:
+  name: system-compiler-activation
+  version: {{ gcc }}
+
+source:
+  path: .
+
+build:
+  number: 0
+  skip: True  # [not linux]
+
+outputs:
+  - name: system_gcc_{{ target_platform }}
+    script: install-gcc.sh
+    requirements:
+      run:
+        # for activation of binutils env vars
+        - {{ pin_subpackage("system_binutils_" ~ target_platform, exact=True) }}
+    test:
+      files:
+        - tests
+      commands:
+        - ${CC} ${CFLAGS} -Wall tests/aligned_alloc.c -c -o c_aligned.o -v
+        - ${CC} ${LDFLAGS} c_aligned.o -o c_aligned
+        - ./c_aligned
+    about:
+      summary: GNU C Compiler (activation scripts)
+      license: BSD-3-Clause
+      license_file: LICENSE
+
+  - name: system_gxx_{{ target_platform }}
+    script: install-g++.sh
+    requirements:
+      run:
+        # for activation of gcc env vars
+        - {{ pin_subpackage("system_gcc_" ~ target_platform, exact=True) }}
+        # for activation of binutils env vars
+        - {{ pin_subpackage("system_binutils_" ~ target_platform, exact=True) }}
+    test:
+      files:
+        - tests
+      commands:
+        - ${CXX} ${CXXFLAGS} -Wall tests/aligned_alloc.cpp -c -o cpp_aligned.o
+        - ${CXX} ${LDFLAGS} cpp_aligned.o -o cpp_aligned
+        - ./cpp_aligned
+    about:
+      summary: GNU C++ Compiler (activation scripts)
+      license: BSD-3-Clause
+      license_file: LICENSE
+
+# - name: gfortran_{{ target_platform }}
+#   script: install-gfortran.sh
+#   requirements:
+#     run:
+#       # for activation of gcc env vars:
+#       - {{ pin_subpackage("gcc_" ~ target_platform, exact=True) }}
+#       # for activation of binutils env vars:
+#       - {{ pin_subpackage("binutils_" ~ target_platform, exact=True) }}
+#   test:
+#     requires:
+#       - cmake >=3.11  # [x86_64 or aarch64 or ppc64le]
+#       - make          # [x86_64 or aarch64 or ppc64le]
+#     commands:
+#       - ${FC} --version
+#       - pushd tests/fortomp
+#       - sh test_fort.sh       # [x86_64 or aarch64 or ppc64le]
+#     files:
+#       - tests/fortomp/*
+#   about:
+#     summary: GNU Fortran Compiler (activation scripts)
+#     license: BSD-3-Clause
+#     license_file: LICENSE
+
+  - name: system_binutils_{{ target_platform }}
+    version: "{{ binutils }}"
+    script: install-binutils.sh
+    test:
+      commands:
+        - test -f $LD
+    about:
+      summary: The GNU Binutils are a collection of binary tools (activation scripts)
+      license: BSD-3-Clause
+      license_file: LICENSE
+
+about:
+  summary: Activation scripts for gcc, g++, gfortran and binutils coming from the system.
+  license: BSD-3-Clause
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - jjhelmus

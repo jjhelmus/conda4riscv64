@@ -1,0 +1,144 @@
+package:
+  name: system-compiler-activation
+  version: {{ gcc }}
+
+source:
+  path: .
+
+build:
+  number: 0
+  skip: True  # [not linux]
+
+outputs:
+  - name: gcc_{{ target_platform }}
+    script: install-gcc.sh
+    requirements:
+      run:
+        # for activation of binutils env vars
+        - {{ pin_subpackage("binutils_" ~ target_platform, exact=True) }}
+    test:
+      files:
+        - tests
+      commands:
+        - ${CC} ${CFLAGS} -Wall tests/aligned_alloc.c -c -o c_aligned.o -v
+        - ${CC} ${LDFLAGS} c_aligned.o -o c_aligned
+        - ./c_aligned
+    about:
+      summary: GNU C Compiler (activation scripts)
+      home: https://github.com/conda-forge/ctng-compiler-activation-feedstock
+      license: BSD-3-Clause
+      license_file: LICENSE
+
+  - name: gcc
+    script: install-symlinks.sh
+    build:
+      skip: True
+    test:
+      commands:
+        - ${PREFIX}/bin/gcc -v
+        - ${PREFIX}/bin/gcov -v
+    about:
+      summary: GNU C native compiler (symlinks)
+      home: https://github.com/conda-forge/ctng-compiler-activation-feedstock
+      license: BSD-3-Clause
+      license_file: LICENSE
+
+  - name: gxx_{{ target_platform }}
+    script: install-g++.sh
+    requirements:
+      run:
+        # for activation of gcc env vars
+        - {{ pin_subpackage("gcc_" ~ target_platform, exact=True) }}
+        # for activation of binutils env vars
+        - {{ pin_subpackage("binutils_" ~ target_platform, exact=True) }}
+    test:
+      files:
+        - tests
+      commands:
+        - ${CXX} ${CXXFLAGS} -Wall tests/aligned_alloc.cpp -c -o cpp_aligned.o
+        - ${CXX} ${LDFLAGS} cpp_aligned.o -o cpp_aligned
+        - ./cpp_aligned
+    about:
+      summary: GNU C++ Compiler (activation scripts)
+      home: https://github.com/conda-forge/ctng-compiler-activation-feedstock
+      license: BSD-3-Clause
+      license_file: LICENSE
+
+  - name: gxx
+    script: install-symlinks.sh
+    build:
+      skip: True
+    requirements:
+        - gcc {{ gcc }}.*
+    test:
+      commands:
+        - ${PREFIX}/bin/g++ -v
+        - ${PREFIX}/bin/gcc -v
+    about:
+      summary: GNU C++ native compiler (symlinks)
+      home: https://github.com/conda-forge/ctng-compiler-activation-feedstock
+      license: BSD-3-Clause
+      license_file: LICENSE
+
+  - name: gfortran_{{ target_platform }}
+    script: install-gfortran.sh
+    requirements:
+      run:
+        # for activation of gcc env vars:
+        - {{ pin_subpackage("gcc_" ~ target_platform, exact=True) }}
+        # for activation of binutils env vars:
+        - {{ pin_subpackage("binutils_" ~ target_platform, exact=True) }}
+    test:
+      requires:
+        - cmake >=3.11  # [x86_64 or aarch64 or ppc64le]
+        - make          # [x86_64 or aarch64 or ppc64le]
+      commands:
+        - ${FC} --version
+        - pushd tests/fortomp
+        - sh test_fort.sh       # [x86_64 or aarch64 or ppc64le]
+      files:
+        - tests/fortomp/*
+    about:
+      summary: GNU Fortran Compiler (activation scripts)
+      home: https://github.com/conda-forge/ctng-compiler-activation-feedstock
+      license: BSD-3-Clause
+      license_file: LICENSE
+
+  - name: gfortran
+    script: install-symlinks.sh
+    build:
+      skip: True
+    requirements:
+      - gcc {{ gcc }}.*
+    test:
+      commands:
+        - ${PREFIX}/bin/gfortran -v
+        - ${PREFIX}/bin/gcc -v
+    about:
+      summary: GNU Fortran native compiler (symlinks)
+      home: https://github.com/conda-forge/ctng-compiler-activation-feedstock
+      license: BSD-3-Clause
+      license_file: LICENSE
+
+  - name: binutils_{{ target_platform }}
+    version: "{{ binutils }}"
+    script: install-binutils.sh
+    test:
+      commands:
+        - test -f $LD
+    about:
+      summary: The GNU Binutils are a collection of binary tools (activation scripts)
+      home: https://github.com/conda-forge/ctng-compiler-activation-feedstock
+      license: BSD-3-Clause
+      license_file: LICENSE
+
+about:
+  summary: Activation scripts for gcc, g++, gfortran and binutils
+  home: https://github.com/conda-forge/ctng-compiler-activation-feedstock
+  license: BSD-3-Clause
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - isuruf
+    - beckermr

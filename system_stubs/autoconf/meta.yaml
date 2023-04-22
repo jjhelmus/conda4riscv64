@@ -1,0 +1,6 @@
+package:
+  name: autoconf
+  version: "2.71"
+
+build:
+  string: system_0

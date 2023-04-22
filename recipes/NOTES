@@ -1,0 +1,111 @@
+System stubs
+----
+autoconf 2.71
+automake 1.16.5
+coreutils 8.32
+curl 7.83.1
+libtool 2.4.7
+make 4.3
+patch 2.7.6
+perl 5.34.0
+pkg-config 0.29.2
+texinfo 6.8
+
+Build order:
+============
+
+--- stubs ---
+autoconf 
+automake 
+coreutils 
+curl
+libtool 
+make 
+patch 
+perl 
+pkg-config 
+texinfo 
+
+---- compilers activation ---
+system-compiler-activation
+
+---- libraries : stage 1 ----
+bzip2
+ca-certificates -- uses system curl for test, could skip
+gnuconfig
+libffi
+xz -- needs system autopoint (not specified)
+zlib
+
+----- libraries : stage 2
+libnsl -- needs gnuconfig, links against libtirpc
+libuuid -- needs gnuconfig, modify build to skip bash_completion build/install
+ncurses -- needs gnuconfig, modified recipe for config.* file and skip part of grep check
+openssl - needs ca-certificates, disable afalg engine
+tk - needs zlib
+
+--- stage 3 ---
+readline - needs ncurses, added gnuconfig
+
+--- stage 4 ---
+sqlite - needs zlib, ncurses, readline, added gnuconfig
+
+
+XXX left of here XXX
+
+
+--- likely stage 5 ---
+python
+
+
+TODO
+Determine why -L${PREFIX} is not in pkg-config --libs for ncurses
+    * see logic in misc/gen-pkgconfig.in
+
+
+
+
+
+
+
+Checked
+                                                                                                                                                                                                         
+        # ERROR: (memory) 'enc_result == ebuf' failed @ test/afalgtest.c:91                                                                                                                               
+        # --- enc_result                                                                                                                                                                                  
+        # +++ ebuf                                                                                                                                                                                        
+        # 0000:-e353779c1079aeb8 2708942dbe77181a 2d                                                                                                                                                      
+        # 0000:+e353779c1079aeb8 2708942dbe77181a e8                                                                                                                                                      
+        #                                         ^^                                                 
+        #                                                                                                                                                                                                 
+        # OPENSSL_TEST_RAND_ORDER=1676565354                                                                                                                                                              
+        not ok 1 - iteration 1                                                                       
+# ------------------------------------------------------------------------------                     
+        # ERROR: (memory) 'enc_result == ebuf' failed @ test/afalgtest.c:91                          
+        # --- enc_result                                                                             
+        # +++ ebuf                     
+        # 0000:-f7e426d1d54f8f39 b19ee0df61b9c255 eb                                                 
+        # 0000:+f7e426d1d54f8f39 b19ee0df61b9c255 0e                                                 
+        #                                         ^^                                                 
+        #                                                                                                                                                                                                 
+        # OPENSSL_TEST_RAND_ORDER=1676565354
+        not ok 2 - iteration 2                                                                       
+# ------------------------------------------------------------------------------                                                                                                                          
+        # ERROR: (memory) 'enc_result == ebuf' failed @ test/afalgtest.c:91                          
+        # --- enc_result                                                                                                                                                                                  
+        # +++ ebuf                                                                                                                                                                                        
+        # 0000:-a07685fdc165719d c7e9136eae5549b4 13                                                                                                                                                      
+        # 0000:+a07685fdc165719d c7e9136eae5549b4 6d                                                                                                                                                      
+        #                                         ^^                                                                                                                                                      
+        #                                                                                                                                                                                                 
+        # OPENSSL_TEST_RAND_ORDER=1676565354                                                                                                                                                              
+        not ok 3 - iteration 3                                                                                                                                                                            
+# ------------------------------------------------------------------------------                                                                                                                          
+    # OPENSSL_TEST_RAND_ORDER=1676565354                                                                                                                                                                  
+    not ok 1 - test_afalg_aes_cbc                                                                                                                                                                         
+# ------------------------------------------------------------------------------                                                                                                                          
+../../util/wrap.pl ../../test/afalgtest => 1                                                                                                                                                              
+not ok 1 - running afalgtest                                                                                                                                                                              
+# ------------------------------------------------------------------------------                     
+#   Failed test 'running afalgtest'                                                                                                                                                                       
+#   at test/recipes/30-test_afalg.t line 21.                                                                                                                                                              
+# Looks like you failed 1 test of 1.30-test_afalg.t ....................

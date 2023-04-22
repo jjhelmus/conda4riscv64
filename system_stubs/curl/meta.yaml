@@ -1,0 +1,6 @@
+package:
+  name: curl
+  version: "7.83.1"
+
+build:
+  string: system_0

@@ -1,0 +1,6 @@
+package:
+  name: libtool
+  version: "2.4.7"
+
+build:
+  string: system_0

@@ -1,0 +1,6 @@
+package:
+  name: automake
+  version: "1.16.5"
+
+build:
+  string: system_0

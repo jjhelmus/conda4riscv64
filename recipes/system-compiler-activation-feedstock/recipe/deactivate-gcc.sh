@@ -1,0 +1,12 @@
+unset CC
+unset CPP
+unset GCC
+unset GCC_AR
+unset GCC_NM
+unset GCC_RANLIB
+unset CC_FOR_BUILD
+unset CPPFLAGS
+unset CFLAGS
+unset LDFLAGS
+unset DEBUG_CPPFLAGS
+unset DEBUG_CFLAGS

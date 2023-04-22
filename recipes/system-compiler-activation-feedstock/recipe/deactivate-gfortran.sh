@@ -1,0 +1,7 @@
+unset GFORTRAN
+unset F95
+unset FC_FOR_BUILD
+unset FFLAGS
+unset FORTRANFLAGS
+unset DEBUG_FFLAGS
+unset DEBUG_FORTRANFLAGS
